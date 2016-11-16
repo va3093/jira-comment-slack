@@ -1,1 +1,1 @@
-web gunicorn manage:app
+web gunicorn manage:jira_comment_slack
