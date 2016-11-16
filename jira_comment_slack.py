@@ -11,10 +11,9 @@ from logging.handlers import RotatingFileHandler, SysLogHandler
 app = Flask(__name__)
 
 try:
-    config = json.load(open('/etc/jira_comment_slack.conf.json', 'r'))
     # Mandatory settings
-    slack_url = config['slack_url']
-    slack_channel = config['channel']
+    slack_url = os.environ['slack_url']
+    slack_channel = os.environ['channel']
 
     # Optional settings
     slack_post = config.get('slack_post', True)
