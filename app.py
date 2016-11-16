@@ -14,12 +14,12 @@ slack_url = os.environ['slack_url']
 slack_channel = os.environ['channel']
 
 # Optional settings
-slack_post = config.get('slack_post', True)
-flask_host = config.get('host', '127.0.0.1')
-flask_port = config.get('port', 11000)
-flask_logfile = config.get('logfile', None)
-flask_logaddress = config.get('syslog_address', '/dev/log')
-flask_debug = config.get('debug', False)
+slack_post = os.environ.get('slack_post', True)
+flask_host = os.environ.get('host', '127.0.0.1')
+flask_port = os.environ.get('port', 11000)
+flask_logfile = os.environ.get('logfile', None)
+flask_logaddress = os.environ.get('syslog_address', '/dev/log')
+flask_debug = os.environ.get('debug', False)
 
 
 

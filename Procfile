@@ -1,1 +1,1 @@
-web gunicorn manage:jira_comment_slack
+web: gunicorn -b $host:$port app:app
