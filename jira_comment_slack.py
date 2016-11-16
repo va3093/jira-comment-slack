@@ -6,38 +6,21 @@ import requests
 
 from flask import Flask, request, jsonify
 
-from logging.handlers import RotatingFileHandler, SysLogHandler
-
 app = Flask(__name__)
 
-try:
-    # Mandatory settings
-    slack_url = os.environ['slack_url']
-    slack_channel = os.environ['channel']
 
-    # Optional settings
-    slack_post = config.get('slack_post', True)
-    flask_host = config.get('host', '127.0.0.1')
-    flask_port = config.get('port', 11000)
-    flask_logfile = config.get('logfile', None)
-    flask_logaddress = config.get('syslog_address', '/dev/log')
-    flask_debug = config.get('debug', False)
-except IOError as ex:
-    raise IOError('Open config file error, please create new config file. %s' % ex)
+# Mandatory settings
+slack_url = os.environ['slack_url']
+slack_channel = os.environ['channel']
 
+# Optional settings
+slack_post = config.get('slack_post', True)
+flask_host = config.get('host', '127.0.0.1')
+flask_port = config.get('port', 11000)
+flask_logfile = config.get('logfile', None)
+flask_logaddress = config.get('syslog_address', '/dev/log')
+flask_debug = config.get('debug', False)
 
-class JiraSysLogHandler(SysLogHandler):
-
-    def __init__(self, *args, **kwargs):
-        kwargs.update({
-            'address': flask_logaddress
-        })
-        super(JiraSysLogHandler, self).__init__(*args, **kwargs)
-        self.formatter = logging.Formatter(fmt='%(ident)s %(levelname)s: %(message)s')
-
-    def emit(self, record):
-        record.ident = 'JiraCommentSlack[%s]:' % os.getpid()
-        super(JiraSysLogHandler, self).emit(record)
 
 
 @app.route('/webhook', methods=['GET', 'POST'])
@@ -107,13 +90,6 @@ def tracking():
 
 
 def main():
-    if flask_logfile:
-        handler = RotatingFileHandler(flask_logfile, maxBytes=10000, backupCount=1)
-    else:
-        handler = JiraSysLogHandler()
-
-    app.logger.addHandler(handler)
-    app.logger.setLevel(logging.DEBUG if flask_debug else logging.INFO)
     app.run(debug=flask_debug, host=flask_host, port=flask_port, passthrough_errors=True)
 
 
